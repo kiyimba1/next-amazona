@@ -6,17 +6,33 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import useStyles from '../utils/styles';
 import NextLink from 'next/link';
 import axios from 'axios';
+import { Store } from '../utils/Store';
+import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const classes = useStyles();
+  const router = useRouter();
+  const { redirect } = router.query;
+  const { state, dispatch } = useContext(Store);
+  const { userInfo } = state;
+  if (userInfo) {
+    router.push('/');
+  }
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (userInfo) {
+      router.push('/');
+    }
+  }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -25,7 +41,10 @@ export default function Login() {
         email,
         password,
       });
-      alert('Success Login');
+      console.log(data);
+      dispatch({ type: 'USER_LOGIN', payload: data });
+      Cookies.set('userInfo', { data });
+      router.push(redirect || '/');
     } catch (error) {
       alert(error.message);
     }
