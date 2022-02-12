@@ -20,7 +20,7 @@ import Cookies from 'js-cookie';
 
 import useStyles from '../utils/styles';
 import { Store } from '../utils/Store';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 function Layout({ title, description, children }) {
   const router = useRouter();
