@@ -14,16 +14,20 @@ import { Store } from '../utils/Store';
 import { useRouter } from 'next/router';
 
 import { useForm, Controller } from 'react-hook-form'
+import CheckoutWizard from '../components/checkoutWizard';
 // import Cookie from 'js-cookie'
 
 export default function Register() {
-  const {handleSubmit, control, formState: {errors}} = useForm();
+  const {handleSubmit, control, formState: {errors}, setValue} = useForm();
 
   const classes = useStyles();
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const { userInfo } = state;
+  const { userInfo, cart: {shippingAddress }} = state;
   const cookies = new Cookies();
+
+
+
 
   
 
@@ -33,6 +37,11 @@ export default function Register() {
     if (!userInfo) {
       router.push('/login?redirect=/shipping');
     }
+    setValue('fullName', shippingAddress.fullName)
+    setValue('address', shippingAddress.address)
+    setValue('city', shippingAddress.city)
+    setValue('postalCode', shippingAddress.postalCode)
+    setValue('country', shippingAddress.country)
   }, []);
 
   const submitHandler =  ({fullName, address, city, postalCode, country}) => {
@@ -44,7 +53,9 @@ export default function Register() {
     
   };
   return (
+  
     <Layout title="Shipping Address">
+      <CheckoutWizard activeStep={1} />
       <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
         <Typography component={'h1'} variant="h1">
           Shipping Address
