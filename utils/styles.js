@@ -41,5 +41,8 @@ const useStyles = makeStyles({
   transparentBackground: {
     backgroundColor: 'transparent'
   },
+  section:{
+    
+  },
 });
 export default useStyles;
