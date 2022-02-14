@@ -6,25 +6,28 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Layout from '../components/Layout';
 import useStyles from '../utils/styles';
 import NextLink from 'next/link';
 import axios from 'axios';
 import { Store } from '../utils/Store';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
-import { useForm } from 'react-hook-form'
-import { useSnackbar } from 'notistack'
+// import Cookie from 'js-cookie';
+import { useForm, Controller } from 'react-hook-form'
+import Cookies from 'universal-cookie';
+// import { useSnackbar } from 'notistack'
 
 export default function Login() {
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
-  const {handleSubmit, Controller, formState: {errors}} = useForm();
+  // const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+  const {handleSubmit, control, formState: {errors}} = useForm();
   const classes = useStyles();
   const router = useRouter();
   const { redirect } = router.query;
   const { state, dispatch } = useContext(Store);
   const { userInfo } = state;
+  const cookies = new Cookies();
+
   if (userInfo) {
     router.push('/');
   }
@@ -38,7 +41,7 @@ export default function Login() {
   }, []);
 
   const submitHandler = async ({email, password}) => {
-    closeSnackbar()
+    // closeSnackbar()
     try {
       const { data } = await axios.post('/api/users/login', {
         email,
@@ -46,10 +49,11 @@ export default function Login() {
       });
       console.log(data);
       dispatch({ type: 'USER_LOGIN', payload: data });
-      Cookies.set('userInfo', { data });
+      cookies.set('userInfo', data)
+      // Cookie.set('userInfo', {data});
       router.push(redirect || '/');
     } catch (error) {
-      enqueueSnackbar(error.responser.data ? error.response.data.message : error.message, {variant: 'error'})
+      // enqueueSnackbar(error.responser.data ? error.response.data.message : error.message, {variant: 'error'})
       
     }
   };
@@ -91,7 +95,7 @@ export default function Login() {
               inputProps={{ type: 'password' }}
               error={Boolean(errors.password)}
               helperText = {errors.password? errors.password.type === 'minLength'?'Password must br 6 characters or more':'Password is required': ''}
-             
+             {...field}
             ></TextField>
             )}></Controller>
             

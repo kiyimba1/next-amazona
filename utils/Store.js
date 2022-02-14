@@ -1,20 +1,25 @@
 import { createContext, useReducer } from 'react';
-import Cookies from 'js-cookie';
+import Cookie from 'js-cookie';
+
 
 export const Store = createContext();
 
 const initialState = {
-  darkMode: Cookies.get('darkMode') === 'ON' ? true : false,
+  darkMode: Cookie.get('darkMode') === 'ON' ? true : false,
   cart: {
-    cartItems: Cookies.get('cartItems')
-      ? JSON.parse(Cookies.get('cartItems'))
+    cartItems: Cookie.get('cartItems')
+      ? JSON.parse(Cookie.get('cartItems'))
       : [],
+    shippingAddress: Cookie.get('shippingAddress')
+      ? JSON.parse(Cookie.get('shippingAddress'))
+      : {},
   },
 
-  userInfo: Cookies.get('userInfo')
-    ? JSON.parse(Cookies.get('userInfo'))
+  userInfo: Cookie.get('userInfo')
+    ? JSON.parse(Cookie.get('userInfo'))
     : null,
 };
+
 
 function reducer(state, action) {
   switch (action.type) {
@@ -32,15 +37,18 @@ function reducer(state, action) {
             item.name === existItem.name ? newItem : item
           )
         : [...state.cart.cartItems, newItem];
-      Cookies.set('cartItems', JSON.stringify(cartItems));
+      Cookie.set('cartItems', JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
     case 'CART_REMOVE_ITEM': {
       const cartItems = state.cart.cartItems.filter(
         (item) => item._id !== action.payload._id
       );
-      Cookies.set('cartItems', JSON.stringify(cartItems));
+      Cookie.set('cartItems', JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
+    }
+    case 'SAVE_SHIPPING_ADDRESS': {
+      return {...state, cart:{...state.cart, shippingAddress: action.payload}}
     }
     case 'USER_LOGIN': {
       return { ...state, userInfo: action.payload };

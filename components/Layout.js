@@ -16,7 +16,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { createTheme } from '@material-ui/core/styles';
-import Cookies from 'js-cookie';
+import Cookie from 'js-cookie';
 
 import useStyles from '../utils/styles';
 import { Store } from '../utils/Store';
@@ -53,7 +53,7 @@ function Layout({ title, description, children }) {
   const darkModeChangeHandler = () => {
     dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON' });
     const newDarkMode = !darkMode;
-    Cookies.set('darkMode', newDarkMode ? 'ON' : 'OFF');
+    Cookie.set('darkMode', newDarkMode ? 'ON' : 'OFF');
   };
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -68,8 +68,8 @@ function Layout({ title, description, children }) {
   const logoutClickHandler = () => {
     setAnchorEl(null);
     dispatch({ type: 'USER_LOGOUT' });
-    Cookies.remove('userInfo');
-    Cookies.remove('cartItems');
+    Cookie.remove('userInfo');
+    Cookie.remove('cartItems');
     router.push('/');
   };
   return (
