@@ -32,7 +32,7 @@ function PlaceOrder() {
   const classes = useStyles();
   const router = useRouter();
   const [loading, setLoading] = useState(false)
-  const { state } = useContext(Store);
+  const { state, dispatch } = useContext(Store);
   const {
     userInfo,
     cart: { cartItems, shippingAddress, paymentMethod },
@@ -49,6 +49,9 @@ function PlaceOrder() {
     if (!paymentMethod) {
       router.push('/payment');
     }
+    if (cartItems.length === 0){
+      router.push('/cart')
+    }
    
   }, []);
 
@@ -56,23 +59,28 @@ function PlaceOrder() {
     try {
       setLoading(true)
       const { data } = await axios.post('/api/orders',{
+        user: userInfo._id,
         orderItems: cartItems,
         shippingAddress,
         paymentMethod,
         itemsPrice,
-        taxPrice
+        shippingPrice,
+        taxPrice,
+        totalPrice
       },{
         headers: {
           authorization: `Bearer ${userInfo.token}`
         }
       } )
-      dispatchEvent({type:'CART_CLEAR'})
-      Cookies.remove('cart-items')
+      console.log(data)
+      dispatch({type:'CART_CLEAR'})
+      Cookies.remove('cartItems')
       
       setLoading(false)
       router.push(`/order/${data._id}`)
     } catch (error) {
       alert(getError(error))
+      console.log(error)
       setLoading(false)
     }
   }
