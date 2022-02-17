@@ -47,7 +47,7 @@ export default function Login() {
         email,
         password,
       });
-      console.log(data);
+      // console.log(data);
       dispatch({ type: 'USER_LOGIN', payload: data });
       cookies.set('userInfo', data)
       // Cookie.set('userInfo', {data});

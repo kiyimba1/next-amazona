@@ -19,7 +19,7 @@ handler.post(async (req, res)=>{
   const order = await newOrder.save();
   res.status(201).send(order)
   } catch (error) {
-    console.log(error)
+    // console.log(error)
   }
   
 })

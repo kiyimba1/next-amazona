@@ -47,7 +47,7 @@ export default function Register() {
       });
       dispatch({type: 'USER_LOGIN', payload: data})
       getCookieParser.set('userInfo', data);
-      console.log(data);
+      // console.log(data);
       router.push(redirect || '/');
     } catch (error) {
       // enqueueSnackbar(error.responser.data ? error.response.data.message : error.message, {variant: 'error'})

@@ -72,7 +72,7 @@ function PlaceOrder() {
           authorization: `Bearer ${userInfo.token}`
         }
       } )
-      console.log(data)
+      // console.log(data)
       dispatch({type:'CART_CLEAR'})
       Cookies.remove('cartItems')
       
@@ -80,7 +80,7 @@ function PlaceOrder() {
       router.push(`/order/${data._id}`)
     } catch (error) {
       alert(getError(error))
-      console.log(error)
+      // console.log(error)
       setLoading(false)
     }
   }
